@@ -1,0 +1,72 @@
+			# Select #
+SELECT * FROM STUDENTS;       												-- To fetch all the data
+SELECT ID, FIRST_NAME, LAST_NAME FROM STUDENTS;								-- To fetch selected columns
+SELECT DISTINCT (AGE) FROM STUDENTS;										-- To fetch distinct data
+
+			# Allias #
+SELECT First_Name as Name_of_Student From Students;
+            
+			# Relational Operator #
+SELECT STAFF_ID, FIRST_NAME, AGE FROM STAFF WHERE FIRST_NAME = 'VIOLET';
+SELECT STAFF_ID, AGE FROM STAFF WHERE GENDER <>'F';
+SELECT *FROM STAFF_SALARY WHERE SALARY>10000;
+
+			# Logical Operator #
+SELECT STAFF_ID, FIRST_NAME, AGE FROM STAFF WHERE FIRST_NAME LIKE 'N%'; 	-- For single vharacter use _
+SELECT STAFF_ID, FIRST_NAME, AGE FROM STAFF WHERE AGE BETWEEN 40 AND 50;
+
+			# Aggregate Function #
+SELECT COUNT(*) FROM STUDENTS WHERE AGE = 6;
+SELECT MAX(SALARY) FROM STAFF_SALARY ;
+SELECT ROUND(AVG(SALARY),2) FROM STAFF_SALARY;
+
+			# Order By #
+SELECT*FROM STAFF_SALARY ORDER BY SALARY;									-- Arrange in ASC Order 
+SELECT*FROM STAFF_SALARY ORDER BY SALARY DESC LIMIT 5;						-- Arrange in DESC Order, Limit number of rows 
+
+			# Group By, Having #
+SELECT AGE Age_of_Student, count(*) as No_of_Student
+FROM STUDENTS
+GROUP BY AGE
+HAVING No_of_Student >3
+ORDER BY AGE;
+
+/* Having works as WHERE but for the Group By Statement */
+
+			# String #
+SELECT REPLACE ('WALDER', 'DER', 'TER') AS SURNAME FROM STUDENTS WHERE ID='STD10002';
+SELECT CONCAT (FIRST_NAME, " ",LAST_NAME) AS Full_Name From Students; 
+
+			# Join #
+	## Method 1 - Using Join Statement ##
+SELECT S1.STAFF_ID, S1.FIRST_NAME, S1.LAST_NAME
+, S2. SALARY
+FROM STAFF AS S1
+JOIN STAFF_SALARY AS S2
+ON S1.STAFF_ID= S2.STAFF_ID
+ORDER BY S2.SALARY DESC; 
+
+	## Method 2 - Using Where Clause ##
+SELECT S1.STAFF_ID ID, CONCAT (S1.FIRST_NAME, " ", S1.LAST_NAME) AS Staff_Name
+, S2. SALARY Salary
+FROM STAFF AS S1, STAFF_SALARY AS S2
+WHERE S1.STAFF_ID= S2.STAFF_ID
+ORDER BY S2.SALARY DESC; 
+
+			# Case Ststement #
+SELECT STAFF_ID, SALARY,
+	CASE 
+		WHEN  SALARY >= 10000 THEN 'High Salary'
+		WHEN SALARY BETWEEN 7000 AND 10000 THEN 'Average Salary'
+        ELSE 'Too Low'
+	END AS SALARY_RANGE
+FROM STAFF_SALARY 
+ORDER BY SALARY DESC;
+
+			# Window #
+SELECT  row_number () OVER(PARTITION BY AGE) AS Sr_No,
+ID, CONCAT (FIRST_NAME, " ", LAST_NAME) AS Student_Name, age,
+dense_rank () OVER(order by age ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS dense_rank_,
+rank () OVER(order by age ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS rank_
+FROM STUDENTS;
+
